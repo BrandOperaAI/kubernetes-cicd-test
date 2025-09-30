@@ -45,13 +45,13 @@ jobs:
           rm -rf gitops
           
           # Clone repository using HTTPS URL without token
-          git clone https://github.com/brandoperaai/test-api-gitops.git gitops
+          git clone https://github.com/${{ env.REPO_OWNER }}/test-api-gitops.git gitops
           cd gitops
           
           if [[ "$OSTYPE" == "darwin"* ]]; then
-            sed -i '' "s|image: ghcr.io/${{ github.repository }}:.*|image: ghcr.io/${{ github.repository }}:${{ github.sha }}|g" deployment.yaml
+            sed -i '' "s|image: ghcr.io/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}:.*|image: ghcr.io/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}:${{ github.sha }}|g" deployment.yaml
           else
-            sed -i "s|image: ghcr.io/${{ github.repository }}:.*|image: ghcr.io/${{ github.repository }}:${{ github.sha }}|g" deployment.yaml
+            sed -i "s|image: ghcr.io/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}:.*|image: ghcr.io/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}:${{ github.sha }}|g" deployment.yaml
           fi
           
           # Commit changes
@@ -61,4 +61,4 @@ jobs:
           git commit -m "Update image to ${{ github.sha }}"
           
           # Push
-          git push -f https://${GIT_TOKEN}@github.com/brandoperaai/test-api-gitops.git main
+          git push -f https://${GIT_TOKEN}@github.com/${{ env.REPO_OWNER }}/test-api-gitops.git main
